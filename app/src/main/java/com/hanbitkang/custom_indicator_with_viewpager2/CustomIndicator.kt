@@ -97,7 +97,6 @@ class CustomIndicator @JvmOverloads constructor(
 
     private fun addIndicator(index: Int, selectedPosition: Int) {
         val indicator = LayoutInflater.from(context).inflate(R.layout.layout_indicator, this, false)
-        indicator.layoutDirection = View.LAYOUT_DIRECTION_LTR
 
         // Set color
         val imageView = indicator.findViewById<ImageView>(R.id.image_indicator)
@@ -108,7 +107,7 @@ class CustomIndicator @JvmOverloads constructor(
         // Set size, margin
         val params = imageView.layoutParams as LinearLayout.LayoutParams
         params.height = indicatorSize
-        params.width = if (index == selectedPosition) selectedIndicatorWidthScale*indicatorSize else indicatorSize
+        params.width = if (index == selectedPosition) selectedIndicatorWidthScale * indicatorSize else indicatorSize
         params.setMargins(indicatorMargin, 0, 0, 0)
         params.setMargins(0, 0, indicatorMargin, 0)
 
