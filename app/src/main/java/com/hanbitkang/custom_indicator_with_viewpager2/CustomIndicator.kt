@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.viewpager2.widget.ViewPager2
-import com.hanbitkang.custom_indicator_with_viewpager2.databinding.ViewCustomIndicatorBinding
+import com.hanbitkang.custom_indicator_with_viewpager2.databinding.LayoutCustomIndicatorBinding
 
 /**
  * A customized indicator view for [ViewPager2]
@@ -23,7 +23,7 @@ class CustomIndicator @JvmOverloads constructor(
     defStyle: Int = 0
 ): FrameLayout(context, attrs, defStyle) {
 
-    private lateinit var binding: ViewCustomIndicatorBinding
+    private lateinit var binding: LayoutCustomIndicatorBinding
     private lateinit var viewPager2: ViewPager2
 
     private var indicatorSize = 20
@@ -43,7 +43,7 @@ class CustomIndicator @JvmOverloads constructor(
     }
 
     private fun initializeView(context: Context) {
-        binding = ViewCustomIndicatorBinding.inflate(LayoutInflater.from(context), this, true)
+        binding = LayoutCustomIndicatorBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     private fun getAttrs(attrs: AttributeSet?) {
