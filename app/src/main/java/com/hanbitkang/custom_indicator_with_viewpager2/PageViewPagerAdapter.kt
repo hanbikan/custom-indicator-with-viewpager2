@@ -1,4 +1,4 @@
-package com.hanbitkang.custom_indicator_with_viewpager2.ui
+package com.hanbitkang.custom_indicator_with_viewpager2
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
