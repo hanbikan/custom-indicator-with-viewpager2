@@ -23,6 +23,9 @@ class CustomIndicator @JvmOverloads constructor(
     defStyle: Int = 0
 ): FrameLayout(context, attrs, defStyle) {
 
+    private lateinit var binding: ViewCustomIndicatorBinding
+    private lateinit var viewPager2: ViewPager2
+
     private var indicatorSize = 20
     private var indicatorMargin = 15
     private var indicatorRadius = indicatorSize*0.5f
@@ -32,9 +35,7 @@ class CustomIndicator @JvmOverloads constructor(
     private var indicatorColor = ContextCompat.getColor(context, R.color.light_gray)
     private var selectedIndicatorColor = ContextCompat.getColor(context, R.color.light_blue)
 
-    private lateinit var binding: ViewCustomIndicatorBinding
-    private var dots = mutableListOf<ImageView>()
-    private lateinit var viewPager2: ViewPager2
+    private var indicators = mutableListOf<ImageView>()
 
     init {
         initializeView(context)
@@ -71,7 +72,7 @@ class CustomIndicator @JvmOverloads constructor(
         this.viewPager2 = viewPager2
 
         val itemCount = viewPager2.adapter?.itemCount?: 0
-        for(i in 0 until itemCount) addDot(i, startPosition)
+        for(i in 0 until itemCount) addIndicator(i, startPosition)
 
         viewPager2.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(
@@ -87,19 +88,19 @@ class CustomIndicator @JvmOverloads constructor(
 
                 // To fix an ui problem which occurs when firstIndex is same as secondIndex
                 if (firstIndex != secondIndex) {
-                    refreshTwoDotColor(firstIndex, secondIndex, positionOffset)
-                    refreshTwoDotWidth(firstIndex, secondIndex, positionOffset)
+                    refreshTwoIndicatorColor(firstIndex, secondIndex, positionOffset)
+                    refreshTwoIndicatorWidth(firstIndex, secondIndex, positionOffset)
                 }
             }
         })
     }
 
-    private fun addDot(index: Int, selectedPosition: Int) {
-        val dot = LayoutInflater.from(context).inflate(R.layout.layout_dot, this, false)
-        dot.layoutDirection = View.LAYOUT_DIRECTION_LTR
+    private fun addIndicator(index: Int, selectedPosition: Int) {
+        val indicator = LayoutInflater.from(context).inflate(R.layout.layout_indicator, this, false)
+        indicator.layoutDirection = View.LAYOUT_DIRECTION_LTR
 
         // Set color
-        val imageView = dot.findViewById<ImageView>(R.id.image_dot)
+        val imageView = indicator.findViewById<ImageView>(R.id.image_indicator)
         imageView.background = (imageView.background as GradientDrawable).apply {
             setColor(if (index == selectedPosition) selectedIndicatorColor else indicatorColor)
         }
@@ -114,11 +115,11 @@ class CustomIndicator @JvmOverloads constructor(
         // Set cornerRadius to the rectangle background then it will be shown as a circle
         (imageView.background as GradientDrawable).cornerRadius = indicatorRadius
 
-        dots.add(imageView)
-        binding.layout.addView(dot)
+        indicators.add(imageView)
+        binding.layout.addView(indicator)
     }
 
-    private fun refreshTwoDotColor(
+    private fun refreshTwoIndicatorColor(
         firstIndex: Int,
         secondIndex: Int,
         positionOffset: Float
@@ -127,11 +128,11 @@ class CustomIndicator @JvmOverloads constructor(
         val firstColor = ColorUtils.blendARGB(selectedIndicatorColor, indicatorColor, positionOffset)
         val secondColor = ColorUtils.blendARGB(indicatorColor, selectedIndicatorColor, positionOffset)
 
-        dots[firstIndex].background = (dots[firstIndex].background as GradientDrawable).apply { setColor(firstColor) }
-        dots[secondIndex].background = (dots[secondIndex].background as GradientDrawable).apply { setColor(secondColor) }
+        indicators[firstIndex].background = (indicators[firstIndex].background as GradientDrawable).apply { setColor(firstColor) }
+        indicators[secondIndex].background = (indicators[secondIndex].background as GradientDrawable).apply { setColor(secondColor) }
     }
 
-    private fun refreshTwoDotWidth(
+    private fun refreshTwoIndicatorWidth(
         firstIndex: Int,
         secondIndex: Int,
         positionOffset: Float
@@ -139,13 +140,13 @@ class CustomIndicator @JvmOverloads constructor(
         val firstWidth = calculateWidthByOffset(positionOffset)
         val secondWidth = calculateWidthByOffset(1 - positionOffset)
 
-        val firstParams = dots[firstIndex].layoutParams
-        val secondParams = dots[secondIndex].layoutParams
+        val firstParams = indicators[firstIndex].layoutParams
+        val secondParams = indicators[secondIndex].layoutParams
         firstParams.width = firstWidth.toInt()
         secondParams.width = secondWidth.toInt()
 
-        dots[firstIndex].layoutParams = firstParams
-        dots[secondIndex].layoutParams = secondParams
+        indicators[firstIndex].layoutParams = firstParams
+        indicators[secondIndex].layoutParams = secondParams
     }
 
     private fun calculateWidthByOffset(offset: Float) = indicatorSize * offset + indicatorSize * selectedIndicatorWidthScale * (1-offset)
