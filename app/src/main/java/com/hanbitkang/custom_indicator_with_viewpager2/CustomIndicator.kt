@@ -29,7 +29,8 @@ class CustomIndicator @JvmOverloads constructor(
     private var indicatorSize = 20
     private var indicatorMargin = 15
     private var indicatorRadius = indicatorSize*0.5f
-    // Determines how large the selected indicator will be compared to the others.
+    // Determines how large indicators will be.(scale by indicatorSize)
+    private var indicatorWidthScale = 1
     private var selectedIndicatorWidthScale = 2
 
     private var indicatorColor = ContextCompat.getColor(context, R.color.light_gray)
@@ -53,8 +54,9 @@ class CustomIndicator @JvmOverloads constructor(
 
     private fun setTypedArray(typedArray: TypedArray) {
         indicatorSize = typedArray.getDimensionPixelSize(R.styleable.CustomIndicator_customIndicatorSize, indicatorSize)
-        indicatorRadius = indicatorSize * 0.5f
-        selectedIndicatorWidthScale = typedArray.getDimensionPixelSize(R.styleable.CustomIndicator_selectedIndicatorWidthScale, selectedIndicatorWidthScale)
+        indicatorRadius = typedArray.getDimensionPixelSize(R.styleable.CustomIndicator_indicatorRadius, (indicatorSize * 0.5f).toInt()).toFloat()
+        selectedIndicatorWidthScale = typedArray.getInt(R.styleable.CustomIndicator_selectedIndicatorWidthScale, selectedIndicatorWidthScale)
+        indicatorWidthScale = typedArray.getInt(R.styleable.CustomIndicator_indicatorWidthScale, indicatorWidthScale)
         indicatorMargin = typedArray.getDimensionPixelSize(R.styleable.CustomIndicator_indicatorMargin, indicatorMargin)
 
         indicatorColor = typedArray.getColor(R.styleable.CustomIndicator_indicatorColor, indicatorColor)
@@ -107,7 +109,7 @@ class CustomIndicator @JvmOverloads constructor(
         // Set size, margin
         val params = imageView.layoutParams as LinearLayout.LayoutParams
         params.height = indicatorSize
-        params.width = if (index == selectedPosition) selectedIndicatorWidthScale * indicatorSize else indicatorSize
+        params.width = if (index == selectedPosition) selectedIndicatorWidthScale * indicatorSize else indicatorWidthScale * indicatorSize
         params.setMargins(indicatorMargin, 0, 0, 0)
         params.setMargins(0, 0, indicatorMargin, 0)
 
@@ -148,5 +150,5 @@ class CustomIndicator @JvmOverloads constructor(
         indicators[secondIndex].layoutParams = secondParams
     }
 
-    private fun calculateWidthByOffset(offset: Float) = indicatorSize * offset + indicatorSize * selectedIndicatorWidthScale * (1-offset)
+    private fun calculateWidthByOffset(offset: Float) = indicatorSize * indicatorWidthScale * offset + indicatorSize * selectedIndicatorWidthScale * (1-offset)
 }
