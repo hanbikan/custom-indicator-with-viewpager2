@@ -11,10 +11,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    }
-
-    override fun onStart() {
-        super.onStart()
         binding.viewPager2.let {
             it.adapter = PageViewPagerAdapter(this)
             binding.customIndicator.setupViewPager2(it, it.currentItem)
