@@ -34,6 +34,9 @@ A simple example of custom indicator for ViewPager2.
 ```
 customIndicator.setupViewPager2(viewPager2, viewPager2.currentItem)
 ```
+```
+binding.customindicator.setupRecyclerView(recyclerView, pagerSnapHelper, itemCount, position)
+```
 
 # License
 ```
