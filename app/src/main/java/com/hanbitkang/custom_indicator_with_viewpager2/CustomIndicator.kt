@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.hanbitkang.custom_indicator_with_viewpager2.databinding.LayoutCustomIndicatorBinding
 
@@ -24,7 +26,6 @@ class CustomIndicator @JvmOverloads constructor(
 ): FrameLayout(context, attrs, defStyle) {
 
     private lateinit var binding: LayoutCustomIndicatorBinding
-    private lateinit var viewPager2: ViewPager2
 
     private var indicatorSize = 20
     private var indicatorMargin = 15
@@ -71,8 +72,6 @@ class CustomIndicator @JvmOverloads constructor(
      * @param startPosition A start position of [ViewPager2].
      */
     fun setupViewPager2(viewPager2: ViewPager2, startPosition: Int) {
-        this.viewPager2 = viewPager2
-
         val itemCount = viewPager2.adapter?.itemCount?: 0
         for(i in 0 until itemCount) addIndicator(i, startPosition)
 
@@ -151,4 +150,35 @@ class CustomIndicator @JvmOverloads constructor(
     }
 
     private fun calculateWidthByOffset(offset: Float) = indicatorSize * indicatorWidthScale * offset + indicatorSize * selectedIndicatorWidthScale * (1-offset)
+
+    /**
+     * @param recyclerView A [RecyclerView] which [CustomIndicator] refers to.
+     * @param pagerSnapHelper A [PagerSnapHelper] attached to [recyclerView].
+     * @param itemCount Item count of [recyclerView].
+     * @param startPosition A start position of [RecyclerView].
+     */
+    fun setupRecyclerView(
+        recyclerView: RecyclerView,
+        pagerSnapHelper: PagerSnapHelper,
+        itemCount: Int,
+        startPosition: Int
+    ) {
+        for (i in 0 until itemCount) addIndicator(i, startPosition)
+
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                pagerSnapHelper.findSnapView(recyclerView.layoutManager)?.let { itemView ->
+                    val position = recyclerView.layoutManager?.getPosition(itemView)?: 0
+                    val offset = itemView.x / itemView.width
+                    val firstIndex = if (offset < 0) position else position - 1
+                    val secondIndex = if (offset < 0) position + 1 else position
+                    val positionOffset = if (offset < 0) -offset else 1 - offset
+                    refreshTwoIndicatorColor(firstIndex, secondIndex, positionOffset)
+                    refreshTwoIndicatorWidth(firstIndex, secondIndex, positionOffset)
+                }
+            }
+        })
+    }
 }
