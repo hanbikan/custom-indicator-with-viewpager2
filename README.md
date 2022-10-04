@@ -1,5 +1,5 @@
 # custom-indicator-with-viewpager2
-A simple example of custom indicator for ViewPager2.
+A simple example of custom indicator for ViewPager2. Also it can be attached to recycler view using PagerSnapHelper.
 
 <img src="https://user-images.githubusercontent.com/58168528/183252255-a66e1fb3-aed1-4cd1-a025-292cf57fdb92.gif" width="300px"/> | <img src="https://user-images.githubusercontent.com/58168528/183554925-4cec3182-cdcd-41ee-941d-034328f2f8ff.gif" width="300px"/>
 
@@ -35,7 +35,7 @@ A simple example of custom indicator for ViewPager2.
 customIndicator.setupViewPager2(viewPager2, viewPager2.currentItem)
 ```
 ```
-binding.customindicator.setupRecyclerView(recyclerView, pagerSnapHelper, itemCount, position)
+customindicator.setupRecyclerView(recyclerView, pagerSnapHelper, itemCount, position)
 ```
 
 # License
